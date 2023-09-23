@@ -50,14 +50,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
+        android.buildFeatures.buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -84,7 +85,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
- 
+
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
@@ -102,11 +103,10 @@ dependencies {
      * Using hilt for DI, to ensure ease of testability and scalability
      */
     implementation("com.google.dagger:hilt-android:$hiltVersion")
-    implementation("androidx.hilt:hilt-navigation-compose:$composeVersion")
     ksp("com.google.dagger:hilt-android-compiler:$hiltVersion")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:$hiltVersion")
-    ksp("androidx.hilt:hilt-compiler:$hiltVersion")
-
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+  //  ksp("androidx.hilt:hilt-compiler:1.1.0")
 
     /**
      * using Glide as image loading and caching solution
@@ -127,7 +127,7 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 
-    /*
+    /**
      * Local Unit Tests
      */
     implementation("androidx.test:core:1.5.0")
@@ -139,7 +139,7 @@ dependencies {
     testImplementation("com.google.truth:truth:1.0.1")
     testImplementation("org.mockito:mockito-core:2.25.0")
 
-    /*
+    /**
      * Instrumented Unit Tests
      */
     androidTestImplementation("junit:junit:4.13.2")

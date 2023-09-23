@@ -5,17 +5,16 @@ plugins {
     id("com.google.devtools.ksp") version "1.8.10-1.0.9" apply false
 }
 
-
-/*
 buildscript {
+    val hiltVersion = "2.40.5"
 
-    ext {
-        var compose_versionsss = "1.0.1"
-    }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
+        classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
+        //classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.21")
+
     }
-}*/
+}
