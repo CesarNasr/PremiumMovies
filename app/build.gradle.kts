@@ -4,6 +4,8 @@ plugins {
     id("com.google.devtools.ksp")
     id("kotlin-android")
     id("dagger.hilt.android.plugin")
+    id ("kotlin-kapt")
+
 }
 
 android {
@@ -25,6 +27,7 @@ android {
         buildConfigField("String", "API_KEY", "\"${properties["API_KEY"]}\"")
         buildConfigField("String", "BASE_URL", "\"${properties["BASE_URL"]}\"")
     }
+
 
     buildTypes {
         debug {
@@ -68,13 +71,15 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+
 }
 
 dependencies {
-    val hiltVersion = "2.40.5"
+    val hiltVersion = "2.44.2"
     val composeVersion = "1.5.3"
     val retrofitVersion = "2.9.0"
-    val glideVersion = "4.12.0"
+    val glideVersion = "4.15.1"
     val roomVersion = "2.5.2"
 
     implementation("androidx.core:core-ktx:1.12.0")
@@ -102,11 +107,10 @@ dependencies {
     /**
      * Using hilt for DI, to ensure ease of testability and scalability
      */
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    ksp("com.google.dagger:hilt-android-compiler:$hiltVersion")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
-  //  ksp("androidx.hilt:hilt-compiler:1.1.0")
+    implementation ("com.google.dagger:hilt-android:$hiltVersion")
+    kapt ("com.google.dagger:hilt-android-compiler:$hiltVersion")
+    kapt ("androidx.hilt:hilt-compiler:1.0.0")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     /**
      * using Glide as image loading and caching solution

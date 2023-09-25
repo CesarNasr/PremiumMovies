@@ -6,7 +6,8 @@ plugins {
 }
 
 buildscript {
-    val hiltVersion = "2.40.5"
+
+    val hiltVersion = "2.44.2"
 
     repositories {
         google()
