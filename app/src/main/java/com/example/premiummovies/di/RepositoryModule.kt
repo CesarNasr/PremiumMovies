@@ -1,7 +1,10 @@
 package com.example.premiummovies.di
 
 
-import com.example.premiummovies.data.network.utils.utils.ResponseConverter
+import com.example.premiummovies.data.mapper.GenresMapper
+import com.example.premiummovies.data.mapper.MovieDetailsMapper
+import com.example.premiummovies.data.mapper.MovieMapper
+import com.example.premiummovies.data.remotedatasource.utils.ResponseConverter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,4 +23,15 @@ object RepositoryModule {
         return ResponseConverter()
     }
 
+    @Provides
+    @Singleton
+    fun provideGenresMapper() = GenresMapper()
+
+    @Provides
+    @Singleton
+    fun provideMovieMapper() = MovieMapper()
+
+    @Provides
+    @Singleton
+    fun provideMovieDetailsMapper() = MovieDetailsMapper()
 }

@@ -1,3 +1,4 @@
+/*
 package com.example.premiummovies.data.localdatasource.database
 
 import android.content.Context
@@ -28,4 +29,4 @@ abstract class AppDatabase : RoomDatabase(){
             AppDatabase::class.java, moviesDatabaseName)
             .build()
     }
-}
+}*/

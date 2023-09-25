@@ -1,4 +1,4 @@
-package com.example.premiummovies.data.network.utils.utils
+package com.example.premiummovies.data.remotedatasource.utils
 /**
  * Sealed Class to monitor the API calls state and update the UI, can hold dynamic data and messages
  */

@@ -2,7 +2,8 @@ package com.example.premiummovies.di
 
 import android.content.Context
 import com.example.premiummovies.BuildConfig
-import com.example.premiummovies.data.network.utils.utils.NetworkHelper
+import com.example.premiummovies.data.remotedatasource.api.remote.MovieApiService
+import com.example.premiummovies.data.remotedatasource.utils.NetworkHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +23,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object NetModule {
+object NetworkModule {
 
     @Provides
     fun provideBaseUrl() = BuildConfig.BASE_URL
@@ -51,18 +52,18 @@ object NetModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL: String): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient, baseUrl: String): Retrofit {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRemoteAPIService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
+    fun provideRemoteAPIService(retrofit: Retrofit): MovieApiService {
+        return retrofit.create(MovieApiService::class.java)
     }
 
     @Provides

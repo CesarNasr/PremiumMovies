@@ -1,4 +1,4 @@
-package com.example.premiummovies.data.network.utils.utils
+package com.example.premiummovies.data.remotedatasource.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
