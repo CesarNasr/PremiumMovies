@@ -12,6 +12,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 /**
@@ -34,14 +35,16 @@ object RepositoryModule {
         responseConverter: ResponseConverter,
         movieMapper: MovieMapper,
         genresMapper: GenresMapper,
-        movieDetailsMapper: MovieDetailsMapper
+        movieDetailsMapper: MovieDetailsMapper,
+        ioDispatcher: CoroutineDispatcher
     ): MovieRepository {
         return MovieRepositoryImpl(
             movieApiService,
             responseConverter,
             genresMapper,
             movieMapper,
-            movieDetailsMapper
+            movieDetailsMapper,
+            ioDispatcher
         )
     }
 

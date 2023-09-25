@@ -2,7 +2,7 @@ package com.example.premiummovies.di
 
 
 import android.content.Context
-import com.example.premiummovies.presentation.ui.utils.ResourcesProvider
+import com.example.premiummovies.presentation.utils.ResourcesProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

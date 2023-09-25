@@ -11,8 +11,11 @@ import com.example.premiummovies.domain.model.dto.genre.GenreList
 import com.example.premiummovies.domain.model.dto.moviedetails.MovieDetails
 import com.example.premiummovies.domain.model.dto.movies.MovieList
 import com.example.premiummovies.domain.repository.MovieRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 import javax.inject.Inject
 
@@ -22,8 +25,9 @@ class MovieRepositoryImpl @Inject constructor(
     private val genresMapper: GenresMapper,
     private val movieMapper: MovieMapper,
     private val movieDetailsMapper: MovieDetailsMapper,
+    private val ioDispatcher: CoroutineDispatcher
 
-    ) : MovieRepository {
+) : MovieRepository {
 
     private val apiKey = BuildConfig.API_KEY
     private val includeAdultMovies = false
@@ -39,7 +43,7 @@ class MovieRepositoryImpl @Inject constructor(
                 genresMapper.mapFromDto(it)
             }
             emit(result)
-        }
+        }.flowOn(ioDispatcher)
 
     }
 
