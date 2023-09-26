@@ -6,12 +6,12 @@ import com.example.premiummovies.data.remotedatasource.api.dto.moviedetails.Movi
 import com.example.premiummovies.data.remotedatasource.api.dto.moviedetails.SpokenLanguageDto
 import com.example.premiummovies.data.remotedatasource.api.dto.movies.MovieDataDto
 import com.example.premiummovies.data.remotedatasource.api.dto.movies.MovieListDto
-import com.example.premiummovies.domain.model.dto.genre.GenreData
-import com.example.premiummovies.domain.model.dto.genre.GenreList
-import com.example.premiummovies.domain.model.dto.moviedetails.MovieDetails
-import com.example.premiummovies.domain.model.dto.moviedetails.SpokenLanguage
-import com.example.premiummovies.domain.model.dto.movies.MovieData
-import com.example.premiummovies.domain.model.dto.movies.MovieList
+import com.example.premiummovies.domain.model.genre.GenreData
+import com.example.premiummovies.domain.model.genre.GenreList
+import com.example.premiummovies.domain.model.moviedetails.MovieDetails
+import com.example.premiummovies.domain.model.moviedetails.SpokenLanguage
+import com.example.premiummovies.domain.model.movies.MovieData
+import com.example.premiummovies.domain.model.movies.MovieList
 import javax.inject.Inject
 
 /**
@@ -119,8 +119,8 @@ class MovieDetailsMapper @Inject constructor() : DtoMapper<MovieDetailsDto, Movi
             spokenLanguages = getSpokenLanguages(dto.spokenLanguages),
             status = dto.status,
             tagline = dto.tagline,
-            title = dto.title
-
+            title = dto.title,
+            homePage = dto.homePage
         )
     }
 
@@ -139,7 +139,8 @@ class MovieDetailsMapper @Inject constructor() : DtoMapper<MovieDetailsDto, Movi
             spokenLanguages = getSpokenLanguagesDto(domainModel.spokenLanguages),
             status = domainModel.status,
             tagline = domainModel.tagline,
-            title = domainModel.title
+            title = domainModel.title,
+            homePage = domainModel.homePage
         )
     }
 

@@ -1,11 +1,11 @@
-package com.example.premiummovies.domain.model.dto.moviedetails
+package com.example.premiummovies.domain.model.moviedetails
 
 
-import com.example.premiummovies.domain.model.dto.genre.GenreData
+import com.example.premiummovies.domain.model.genre.GenreData
 
 data class MovieDetails(
 
-    val backdropPath: String,
+    val backdropPath: String?,
     val budget: Int,
     val genres: List<GenreData>,
     val id: Int,
@@ -19,4 +19,5 @@ data class MovieDetails(
     val status: String,
     val tagline: String,
     val title: String,
+    val homePage: String
 )

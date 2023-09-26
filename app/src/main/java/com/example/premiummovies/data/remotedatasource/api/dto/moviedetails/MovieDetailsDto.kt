@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 data class MovieDetailsDto(
 
     @SerializedName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
 
     @SerializedName("budget")
     val budget: Int,
@@ -47,4 +47,7 @@ data class MovieDetailsDto(
 
     @SerializedName("title")
     val title: String,
+
+    @SerializedName("homepage")
+    val homePage: String,
     )

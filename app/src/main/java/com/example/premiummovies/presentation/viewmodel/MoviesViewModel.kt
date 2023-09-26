@@ -9,9 +9,6 @@ import com.example.premiummovies.data.remotedatasource.utils.Resource
 import com.example.premiummovies.domain.repository.MovieRepository
 import com.example.premiummovies.presentation.movielist.MovieListingsState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +16,7 @@ import javax.inject.Inject
 class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepository) :
     ViewModel() {
     var state by mutableStateOf(MovieListingsState())
+    var movieDetailsState by mutableStateOf(MovieListingsState())
 
     /*private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()*/
@@ -27,14 +25,18 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
         getMovieList()
     }
 
-    private fun getMovieList() {
+    fun getMovieList() {
         viewModelScope.launch {
-            movieRepository.getTrendingMovies(state.pageNo).collect { result ->
+            movieRepository.getTrendingMovies(state.pageNo + 1).collect { result ->
                 when (result) {
                     is Resource.Success -> {
                         result.data?.let { listings ->
+
+                            val newList = state.movies
+                            newList.addAll(listings.results)
+
                             state = state.copy(
-                                movies = listings.results,
+                                movies = newList,
                                 pageNo = listings.page
                             )
                         }

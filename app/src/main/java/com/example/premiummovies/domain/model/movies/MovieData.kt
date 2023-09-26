@@ -1,11 +1,11 @@
-package com.example.premiummovies.domain.model.dto.movies
+package com.example.premiummovies.domain.model.movies
 
 
 import com.google.gson.annotations.SerializedName
 
 data class MovieData(
 
-    val backdropPath: String,
+    val backdropPath: String?,
     val genreIds: List<Int>,
     val id: Int,
     val originalTitle: String,

@@ -1,9 +1,9 @@
 package com.example.premiummovies.domain.repository
 
 import com.example.premiummovies.data.remotedatasource.utils.Resource
-import com.example.premiummovies.domain.model.dto.genre.GenreList
-import com.example.premiummovies.domain.model.dto.moviedetails.MovieDetails
-import com.example.premiummovies.domain.model.dto.movies.MovieList
+import com.example.premiummovies.domain.model.genre.GenreList
+import com.example.premiummovies.domain.model.moviedetails.MovieDetails
+import com.example.premiummovies.domain.model.movies.MovieList
 import kotlinx.coroutines.flow.Flow
 
 

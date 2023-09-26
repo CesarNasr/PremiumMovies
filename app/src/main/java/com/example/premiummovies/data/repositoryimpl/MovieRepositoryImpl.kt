@@ -7,9 +7,9 @@ import com.example.premiummovies.data.mapper.MovieMapper
 import com.example.premiummovies.data.remotedatasource.api.remote.MovieApiService
 import com.example.premiummovies.data.remotedatasource.utils.Resource
 import com.example.premiummovies.data.remotedatasource.utils.ResponseConverter
-import com.example.premiummovies.domain.model.dto.genre.GenreList
-import com.example.premiummovies.domain.model.dto.moviedetails.MovieDetails
-import com.example.premiummovies.domain.model.dto.movies.MovieList
+import com.example.premiummovies.domain.model.genre.GenreList
+import com.example.premiummovies.domain.model.moviedetails.MovieDetails
+import com.example.premiummovies.domain.model.movies.MovieList
 import com.example.premiummovies.domain.repository.MovieRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

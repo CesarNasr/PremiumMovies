@@ -1,4 +1,4 @@
-package com.example.premiummovies.domain.model.dto.moviedetails
+package com.example.premiummovies.domain.model.moviedetails
 
 
 data class SpokenLanguage(

@@ -1,4 +1,4 @@
-package com.example.premiummovies.domain.model.dto.movies
+package com.example.premiummovies.domain.model.movies
 
 
 

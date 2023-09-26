@@ -1,4 +1,4 @@
-package com.example.premiummovies.domain.model.dto.genre
+package com.example.premiummovies.domain.model.genre
 
 data class GenreData(
     val id: Int,

@@ -1,7 +1,5 @@
-package com.example.premiummovies.domain.model.dto
+package com.example.premiummovies.domain.model
 
-
-import com.google.gson.annotations.SerializedName
 
 data class ApiEntry<T>(
     val data: T,
