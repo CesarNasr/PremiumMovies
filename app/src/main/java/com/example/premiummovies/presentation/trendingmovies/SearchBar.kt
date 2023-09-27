@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 
-package com.example.premiummovies.presentation.movielist
+package com.example.premiummovies.presentation.trendingmovies
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(modifier: Modifier = Modifier, searchQuery: String, onSearch: (String) -> Unit) {
     var text by remember { mutableStateOf(searchQuery) }

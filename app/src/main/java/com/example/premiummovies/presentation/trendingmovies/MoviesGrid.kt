@@ -1,12 +1,10 @@
-package com.example.premiummovies.presentation.movielist
+package com.example.premiummovies.presentation.trendingmovies
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -16,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MoviesGrid(state: MovieListingsState, onLoadMore: () -> Unit,  onItemClicked: (Int) -> Unit) {
+fun MoviesGrid(state: MoviesState, onLoadMore: () -> Unit, onItemClicked: (Int) -> Unit) {
 
     val listState = rememberLazyGridState()
 

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.premiummovies.presentation.movielist
+package com.example.premiummovies.presentation.trendingmovies
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,9 +24,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.premiummovies.R
 import com.example.premiummovies.presentation.navigation.Screen
-import com.example.premiummovies.presentation.ui.theme.Amber
-import com.example.premiummovies.presentation.ui.theme.PremiumMoviesTheme
-import com.example.premiummovies.presentation.viewmodel.MoviesViewModel
+import com.example.premiummovies.presentation.trendingmovies.viewmodel.MoviesViewModel
+import com.example.premiummovies.presentation.utils.theme.Amber
+import com.example.premiummovies.presentation.utils.theme.PremiumMoviesTheme
 
 @Composable
 fun TrendingMoviesScreen(

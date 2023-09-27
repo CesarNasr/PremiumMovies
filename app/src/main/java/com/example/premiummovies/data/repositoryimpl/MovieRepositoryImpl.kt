@@ -1,6 +1,8 @@
 package com.example.premiummovies.data.repositoryimpl
 
 import com.example.premiummovies.BuildConfig
+import com.example.premiummovies.data.localdatasource.database.AppDatabase
+import com.example.premiummovies.data.localdatasource.entity.genre.GenreListEntity
 import com.example.premiummovies.data.mapper.GenresMapper
 import com.example.premiummovies.data.mapper.MovieDetailsMapper
 import com.example.premiummovies.data.mapper.MovieMapper
@@ -12,10 +14,10 @@ import com.example.premiummovies.domain.model.moviedetails.MovieDetails
 import com.example.premiummovies.domain.model.movies.MovieList
 import com.example.premiummovies.domain.repository.MovieRepository
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.io.IOException
 
 import javax.inject.Inject
 
@@ -24,10 +26,12 @@ class MovieRepositoryImpl @Inject constructor(
     private val responseConverter: ResponseConverter,
     private val genresMapper: GenresMapper,
     private val movieMapper: MovieMapper,
+    private val db: AppDatabase,
     private val movieDetailsMapper: MovieDetailsMapper,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
 
-) : MovieRepository {
+
+    ) : MovieRepository {
 
     private val apiKey = BuildConfig.API_KEY
     private val includeAdultMovies = false
@@ -36,44 +40,87 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun getMovieGenres(): Flow<Resource<GenreList>> {
 
         return flow {
-            emit(Resource.Loading())
-            val response = movieApiService.getMovieGenres(apiKey = apiKey)
+            try {
+                emit(Resource.Loading())
+                val response = movieApiService.getMovieGenres(apiKey = apiKey)
 
-            val result = responseConverter.responseToResult(response = response) {
-                genresMapper.mapFromDto(it)
+                val result = responseConverter.responseToResult(response = response) {
+                    genresMapper.mapFromDto(it)
+                }
+
+                if (result is Resource.Success) {
+                    result.data?.let {
+                        db.GenresDao()
+                            .insertGenresData(genresMapper.mapToEntity(result.data).genres)
+                        emit(result)
+                    }
+                } else if (result is Resource.Error) {
+                    emit(fetchLocalGenres())
+                }
+            } catch (e: IOException) {
+                emit(fetchLocalGenres())
             }
-            emit(result)
         }.flowOn(ioDispatcher)
+    }
 
+    private fun fetchLocalGenres(): Resource.Success<GenreList> {
+        val localGenres = db.GenresDao().getAll()
+        val result = (genresMapper.mapFromLocalEntity(GenreListEntity(localGenres)))
+        return Resource.Success(result)
     }
 
     override suspend fun getTrendingMovies(page: Int): Flow<Resource<MovieList>> {
         return flow {
-            emit(Resource.Loading())
-            val response = movieApiService.getTrendingMovies(
-                includeAdult = includeAdultMovies,
-                sortBy = sortBy,
-                page = page,
-                apiKey = apiKey
-            )
+            try {
+                emit(Resource.Loading())
+                val response = movieApiService.getTrendingMovies(
+                    includeAdult = includeAdultMovies,
+                    sortBy = sortBy,
+                    page = page,
+                    apiKey = apiKey
+                )
 
-            val result = responseConverter.responseToResult(response = response) {
-                movieMapper.mapToMovieListDomain(it)
+                val result = responseConverter.responseToResult(response = response) {
+                    movieMapper.mapToMovieListDomain(it)
+                }
+
+                if (result is Resource.Success) {
+                    result.data?.let {
+                        db.MoviesDao()
+                            .insertMoviesData(movieMapper.mapToMovieListEntity(result.data))
+                        emit(result)
+                    }
+                } else if (result is Resource.Error) {
+                    emit(fetchLocalTrendingMovies())
+                }
+            } catch (e: IOException) {
+                emit(fetchLocalTrendingMovies())
             }
-            emit(result)
-        }
+
+        }.flowOn(ioDispatcher)
+    }
+
+    private fun fetchLocalTrendingMovies(): Resource.Success<MovieList> {
+        val localMovies = db.MoviesDao().getAll()
+        return Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
     }
 
     override suspend fun getMovieDetails(movieId: Int): Flow<Resource<MovieDetails>> {
         return flow {
-            emit(Resource.Loading())
+            try {
 
-            val response = movieApiService.getMovieDetails(movieId = movieId, apiKey = apiKey)
+                emit(Resource.Loading())
 
-            val result = responseConverter.responseToResult(response = response) {
-                movieDetailsMapper.mapFromDto(it)
+                val response = movieApiService.getMovieDetails(movieId = movieId, apiKey = apiKey)
+
+                val result = responseConverter.responseToResult(response = response) {
+                    movieDetailsMapper.mapFromDto(it)
+                }
+                emit(result)
+            } catch (e: IOException) {
+                emit(Resource.Error("Please check your internet connection"))
+
             }
-            emit(result)
         }
     }
 

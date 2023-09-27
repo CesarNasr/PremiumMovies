@@ -1,6 +1,7 @@
 package com.example.premiummovies.di
 
 
+import com.example.premiummovies.data.localdatasource.database.AppDatabase
 import com.example.premiummovies.data.mapper.GenresMapper
 import com.example.premiummovies.data.mapper.MovieDetailsMapper
 import com.example.premiummovies.data.mapper.MovieMapper
@@ -36,6 +37,7 @@ object RepositoryModule {
         movieMapper: MovieMapper,
         genresMapper: GenresMapper,
         movieDetailsMapper: MovieDetailsMapper,
+        appDataBase: AppDatabase,
         ioDispatcher: CoroutineDispatcher
     ): MovieRepository {
         return MovieRepositoryImpl(
@@ -43,6 +45,7 @@ object RepositoryModule {
             responseConverter,
             genresMapper,
             movieMapper,
+            appDataBase,
             movieDetailsMapper,
             ioDispatcher
         )

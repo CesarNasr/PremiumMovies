@@ -1,4 +1,4 @@
-package com.example.premiummovies.presentation.viewmodel
+package com.example.premiummovies.presentation.moviedetails.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,11 +9,9 @@ import com.example.premiummovies.data.remotedatasource.utils.Resource
 import com.example.premiummovies.domain.model.genre.GenreData
 import com.example.premiummovies.domain.model.moviedetails.SpokenLanguage
 import com.example.premiummovies.domain.repository.MovieRepository
-import com.example.premiummovies.presentation.movielist.MovieDetailState
-import com.example.premiummovies.presentation.movielist.MovieListingsState
+import com.example.premiummovies.presentation.moviedetails.MovieDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.lang.StringBuilder
 import javax.inject.Inject
 
 @HiltViewModel

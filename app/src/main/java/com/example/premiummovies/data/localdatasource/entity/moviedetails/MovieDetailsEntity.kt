@@ -1,11 +1,10 @@
-package com.example.premiummovies.data.remotedatasource.api.dto.moviedetails
+package com.example.premiummovies.data.localdatasource.entity.moviedetails
 
 
-import com.example.premiummovies.data.localdatasource.entity.moviedetails.SpokenLanguageEntity
-import com.example.premiummovies.data.remotedatasource.api.dto.genre.GenreDataDto
+import com.example.premiummovies.data.localdatasource.entity.genre.GenreDataEntity
 import com.google.gson.annotations.SerializedName
 
-data class MovieDetailsDto(
+data class MovieDetailsEntity(
 
     @SerializedName("backdrop_path")
     val backdropPath: String?,
@@ -14,7 +13,7 @@ data class MovieDetailsDto(
     val budget: Int,
 
     @SerializedName("genres")
-    val genres: List<GenreDataDto>,
+    val genres: List<GenreDataEntity>,
 
     @SerializedName("id")
     val id: Int,
@@ -38,7 +37,7 @@ data class MovieDetailsDto(
     val runtime: Int,
 
     @SerializedName("spoken_languages")
-    val spokenLanguages: List<SpokenLanguageDto>,
+    val spokenLanguages: List<SpokenLanguageEntity>,
 
     @SerializedName("status")
     val status: String,

@@ -1,5 +1,10 @@
 package com.example.premiummovies.data.mapper
 
+import com.example.premiummovies.data.localdatasource.entity.genre.GenreDataEntity
+import com.example.premiummovies.data.localdatasource.entity.genre.GenreListEntity
+import com.example.premiummovies.data.localdatasource.entity.moviedetails.MovieDetailsEntity
+import com.example.premiummovies.data.localdatasource.entity.movies.MovieDataEntity
+import com.example.premiummovies.data.localdatasource.entity.movies.MovieListEntity
 import com.example.premiummovies.data.remotedatasource.api.dto.genre.GenreDataDto
 import com.example.premiummovies.data.remotedatasource.api.dto.genre.GenreListDto
 import com.example.premiummovies.data.remotedatasource.api.dto.moviedetails.MovieDetailsDto
@@ -18,7 +23,7 @@ import javax.inject.Inject
  * Each level of our app (local data source/ remote datasource / Domain) has it's own entity/ models and this class helps us map
  * them to one another
  */
-class GenresMapper @Inject constructor() : DtoMapper<GenreListDto, GenreList> {
+class GenresMapper @Inject constructor() : Mapper<GenreListDto, GenreList, GenreListEntity> {
 
     override fun mapFromDto(dto: GenreListDto): GenreList {
         val genresList = mutableListOf<GenreData>()
@@ -40,9 +45,42 @@ class GenresMapper @Inject constructor() : DtoMapper<GenreListDto, GenreList> {
         )
     }
 
+    override fun mapFromLocalEntity(entity: GenreListEntity): GenreList {
+        val genresList = mutableListOf<GenreData>()
+        for (genre in entity.genres) {
+            genresList.add(genre.toGenre())
+        }
+        return GenreList(
+            genres = genresList
+        )
+    }
+
+    override fun mapToEntity(domainModel: GenreList): GenreListEntity {
+        val genresList = mutableListOf<GenreDataEntity>()
+        for (genreDto in domainModel.genres) {
+            genresList.add(genreDto.toGenreEntity())
+        }
+        return GenreListEntity(
+            genres = genresList
+        )
+    }
+
+
+    private fun GenreDataEntity.toGenre(): GenreData {
+        return GenreData(
+            id = id,
+            name = name
+        )
+    }
+
+    private fun GenreData.toGenreEntity(): GenreDataEntity {
+        return GenreDataEntity(
+            id = id,
+            name = name
+        )
+    }
 
 }
-
 
 private fun GenreDataDto.toGenre(): GenreData {
     return GenreData(
@@ -59,7 +97,7 @@ private fun GenreData.toGenreDto(): GenreDataDto {
 }
 
 
-class MovieMapper @Inject constructor() : DtoMapper<MovieDataDto, MovieData> {
+class MovieMapper @Inject constructor() : Mapper<MovieDataDto, MovieData, MovieDataEntity> {
 
     override fun mapFromDto(dto: MovieDataDto): MovieData {
         return MovieData(
@@ -98,10 +136,63 @@ class MovieMapper @Inject constructor() : DtoMapper<MovieDataDto, MovieData> {
             totalResults = movieListDto.totalResults
         )
     }
+
+    override fun mapFromLocalEntity(entity: MovieDataEntity): MovieData {
+        return MovieData(
+            backdropPath = entity.backdropPath,
+            genreIds = entity.genreIds,
+            id = entity.id,
+            originalTitle = entity.originalTitle,
+            posterPath = entity.posterPath,
+            releaseDate = entity.releaseDate,
+            title = entity.title
+        )
+    }
+
+    override fun mapToEntity(domainModel: MovieData): MovieDataEntity {
+        return MovieDataEntity(
+            backdropPath = domainModel.backdropPath,
+            genreIds = domainModel.genreIds,
+            id = domainModel.id,
+            originalTitle = domainModel.originalTitle,
+            posterPath = domainModel.posterPath,
+            releaseDate = domainModel.releaseDate,
+            title = domainModel.title
+        )
+    }
+
+    fun mapFromMovieListEntity(movieListEntity: MovieListEntity): MovieList {
+        val movieList = mutableListOf<MovieData>()
+        for (movie in movieListEntity.results) {
+            movieList.add(mapFromLocalEntity(movie))
+        }
+
+        return MovieList(
+            page = movieListEntity.page,
+            results = movieList,
+            totalPages = movieListEntity.totalPages,
+            totalResults = movieListEntity.totalResults
+        )
+    }
+
+    fun mapToMovieListEntity(movieList: MovieList): MovieListEntity {
+        val movieData = mutableListOf<MovieDataEntity>()
+        for (movie in movieList.results) {
+            movieData.add(mapToEntity(movie))
+        }
+
+        return MovieListEntity(
+            page = movieList.page,
+            results = movieData,
+            totalPages = movieList.totalPages,
+            totalResults = movieList.totalResults
+        )
+    }
 }
 
 
-class MovieDetailsMapper @Inject constructor() : DtoMapper<MovieDetailsDto, MovieDetails> {
+class MovieDetailsMapper @Inject constructor() :
+    Mapper<MovieDetailsDto, MovieDetails, MovieDetailsEntity> {
 
 
     override fun mapFromDto(dto: MovieDetailsDto): MovieDetails {
@@ -187,6 +278,14 @@ class MovieDetailsMapper @Inject constructor() : DtoMapper<MovieDetailsDto, Movi
         }
 
         return spokenLanguageDto
+    }
+
+    override fun mapFromLocalEntity(entity: MovieDetailsEntity): MovieDetails {
+        TODO("Not yet implemented")
+    }
+
+    override fun mapToEntity(domainModel: MovieDetails): MovieDetailsEntity {
+        TODO("Not yet implemented")
     }
 
 }

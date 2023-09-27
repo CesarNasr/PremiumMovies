@@ -36,10 +36,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.premiummovies.R
-import com.example.premiummovies.presentation.movielist.MovieDetailState
+import com.example.premiummovies.presentation.moviedetails.viewmodel.MovieDetailsViewModel
 import com.example.premiummovies.presentation.utils.getImageUrl
 import com.example.premiummovies.presentation.utils.getYear
-import com.example.premiummovies.presentation.viewmodel.MovieDetailsViewModel
 
 @Composable
 fun MovieDetailsScreen(

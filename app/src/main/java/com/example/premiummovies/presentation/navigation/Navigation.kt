@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.premiummovies.presentation.moviedetails.MovieDetailsScreen
-import com.example.premiummovies.presentation.movielist.TrendingMoviesScreen
+import com.example.premiummovies.presentation.trendingmovies.TrendingMoviesScreen
 
 @Composable
 fun Navigation() {

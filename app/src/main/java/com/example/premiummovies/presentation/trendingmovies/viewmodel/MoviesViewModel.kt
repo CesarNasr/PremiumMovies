@@ -1,4 +1,4 @@
-package com.example.premiummovies.presentation.viewmodel
+package com.example.premiummovies.presentation.trendingmovies.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.premiummovies.data.remotedatasource.utils.Resource
 import com.example.premiummovies.domain.repository.MovieRepository
-import com.example.premiummovies.presentation.movielist.MovieListingsState
+import com.example.premiummovies.presentation.trendingmovies.MoviesState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,8 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepository) :
     ViewModel() {
-    var state by mutableStateOf(MovieListingsState())
-    var movieDetailsState by mutableStateOf(MovieListingsState())
+    var state by mutableStateOf(MoviesState())
+    var movieDetailsState by mutableStateOf(MoviesState())
 
     /*private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()*/
@@ -75,7 +75,7 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
 
 
 
-    fun getMoviesData(){
+    private fun getMoviesData(){
         getMovieList()
         getGenresList()
     }

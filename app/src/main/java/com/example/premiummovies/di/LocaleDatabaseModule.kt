@@ -1,4 +1,3 @@
-/*
 package com.example.premiummovies.di
 
 import android.content.Context
@@ -12,10 +11,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-*/
+
 /**
  * Dependency injection class that provides instances related to local room db
- *//*
+ */
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -29,4 +28,4 @@ object LocaleDatabaseModule {
             AppDatabase::class.java, moviesDatabaseName
         ).build()
     }
-}*/
+}

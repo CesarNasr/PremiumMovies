@@ -1,4 +1,4 @@
-package com.example.premiummovies.presentation.movielist
+package com.example.premiummovies.presentation.trendingmovies
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

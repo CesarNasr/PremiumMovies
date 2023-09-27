@@ -1,4 +1,4 @@
-package com.example.premiummovies.presentation.ui.theme
+package com.example.premiummovies.presentation.utils.theme
 
 import androidx.compose.ui.graphics.Color
 

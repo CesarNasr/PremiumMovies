@@ -1,4 +1,4 @@
-package com.example.premiummovies.presentation.movielist
+package com.example.premiummovies.presentation.trendingmovies
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
