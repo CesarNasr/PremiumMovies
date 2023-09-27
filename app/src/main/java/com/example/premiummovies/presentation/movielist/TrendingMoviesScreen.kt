@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.premiummovies.presentation.movielist
 
 import androidx.compose.foundation.layout.Column
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,6 +33,7 @@ fun TrendingMoviesScreen(
     navController: NavController,
     viewModel: MoviesViewModel = hiltViewModel()/* ,state: MovieListingsState, onLoadMore: () -> Unit*/
 ) {
+
     PremiumMoviesTheme {
         // A surface container using the 'background' color from the theme
         Surface(
@@ -46,15 +50,27 @@ fun TrendingMoviesScreen(
 
             ) {
                 SearchBar(
-                    modifier = Modifier.fillMaxWidth()
-
+                    modifier = Modifier.fillMaxWidth(),
+                    viewModel.state.searchQuery
                 ) {
-
+                    viewModel.state.searchQuery = it
+                    // fetchData()
+                    // todo update data
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 TitleText()
+
+                Spacer(modifier = Modifier.height(7.dp))
+
+                viewModel.state.genres?.genres?.let { genres ->
+                    FilterChipGroup(genres, viewModel.state.selectedGenre) {
+                        viewModel.state.selectedGenre = it
+                        // fetchData()
+                        // todo update data
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -80,3 +96,5 @@ fun TitleText() {
         )
     )
 }
+
+

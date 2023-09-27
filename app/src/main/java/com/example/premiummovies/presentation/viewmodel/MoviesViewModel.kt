@@ -22,7 +22,7 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
     val searchText = _searchText.asStateFlow()*/
 
     init {
-        getMovieList()
+        getMoviesData()
     }
 
     fun getMovieList() {
@@ -49,5 +49,34 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
                 }
             }
         }
+    }
+
+
+    private fun getGenresList() {
+        viewModelScope.launch {
+            movieRepository.getMovieGenres().collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let { genres ->
+                            state = state.copy(
+                                genres = genres
+                            )
+                        }
+                    }
+
+                    is Resource.Error -> Unit
+                    is Resource.Loading -> {
+                        state = state.copy(isLoading = result.isLoading)
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    fun getMoviesData(){
+        getMovieList()
+        getGenresList()
     }
 }

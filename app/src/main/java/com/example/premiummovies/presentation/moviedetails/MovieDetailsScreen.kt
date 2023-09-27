@@ -25,8 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,13 +36,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.premiummovies.R
-import com.example.premiummovies.domain.model.genre.GenreData
-import com.example.premiummovies.domain.model.moviedetails.SpokenLanguage
 import com.example.premiummovies.presentation.movielist.MovieDetailState
 import com.example.premiummovies.presentation.utils.getImageUrl
 import com.example.premiummovies.presentation.utils.getYear
 import com.example.premiummovies.presentation.viewmodel.MovieDetailsViewModel
-import java.lang.StringBuilder
 
 @Composable
 fun MovieDetailsScreen(
@@ -63,6 +60,7 @@ fun MovieDetailsScreen(
         MovieDetailsBody(state, viewModel)
     }
 }
+
 
 
 @Composable
@@ -131,7 +129,7 @@ fun MovieDetailsBody(state: MovieDetailState, viewModel: MovieDetailsViewModel) 
             text = state.movie?.overview ?: "",
         )
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(70.dp))
 
         Column(modifier = Modifier.padding(10.dp)) {
             BuildAnnotatedString(state.movie?.homePage)
@@ -143,22 +141,30 @@ fun MovieDetailsBody(state: MovieDetailState, viewModel: MovieDetailsViewModel) 
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                BuildWeighedString("Status", state.movie?.status ?: "")
-                BuildWeighedString("Runtime", state.movie?.runtime.toString())
+                BuildWeighedString(stringResource(R.string.status), state.movie?.status ?: "")
+                BuildWeighedString(
+                    stringResource(R.string.runtime),
+                    state.movie?.runtime.toString()
+                )
             }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                BuildWeighedString("Budget", state.movie?.budget.toString() + "$")
-                BuildWeighedString("Revenue", state.movie?.revenue.toString() + "$")
+                BuildWeighedString(
+                    stringResource(R.string.budget),
+                    state.movie?.budget.toString() + stringResource(R.string.minutes)
+                )
+                BuildWeighedString(
+                    stringResource(R.string.revenue),
+                    state.movie?.revenue.toString() + stringResource(R.string.usd)
+                )
             }
         }
     }
 
 }
-
 
 @Composable
 fun BuildAnnotatedString(url: String?) {
@@ -168,7 +174,7 @@ fun BuildAnnotatedString(url: String?) {
 
         val annotatedString = buildAnnotatedString {
             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                append("Homepage: ")
+                append(stringResource(R.string.homepage))
             }
             pushStringAnnotation(tag = "url", annotation = url)
             withStyle(style = SpanStyle(color = Color.Blue)) {

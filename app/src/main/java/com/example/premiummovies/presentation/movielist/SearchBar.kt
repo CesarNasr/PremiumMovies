@@ -2,8 +2,6 @@
 
 package com.example.premiummovies.presentation.movielist
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,8 +24,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
-    var text by remember { mutableStateOf("") }
+fun SearchBar(modifier: Modifier = Modifier, searchQuery: String, onSearch: (String) -> Unit) {
+    var text by remember { mutableStateOf(searchQuery) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -37,6 +35,7 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
         //   label = { Text("Search") },
         onValueChange = {
             text = it
+           onSearch(text)
             //viewModel::onSearchTextChange
         },
         maxLines = 1,
