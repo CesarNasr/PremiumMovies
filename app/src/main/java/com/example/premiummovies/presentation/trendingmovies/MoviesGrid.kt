@@ -23,8 +23,8 @@ fun MoviesGrid(state: MoviesState, onLoadMore: () -> Unit, onItemClicked: (Int) 
         columns = GridCells.Adaptive(minSize = 128.dp),
         modifier = Modifier.fillMaxSize()
     ) {
-        items(state.movies.size) { i ->
-            val movie = state.movies[i]
+        items(state.movies?.size!!) { i ->
+            val movie = state.movies!![i]
             MovieItem(
                 movie = movie
             ) {

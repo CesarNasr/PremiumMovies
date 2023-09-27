@@ -21,36 +21,43 @@ interface MoviesDao {
 
 
     @Transaction
-    fun insertMoviesData(movies: MovieListEntity, movieDataDao: MovieDataDao){
+    fun insertMoviesData(movies: MovieListEntity, movieDataDao: MovieDataDao) {
         //deleteAllItems()
         insertItem(movies)
         movieDataDao.insertMoviesData(movies.results)
     }
 
     @Transaction
-    fun getAllMovieData(movieDataDao: MovieDataDao, searchQuery: String = ""): MovieListEntity {
+    fun getAllMovieData(
+        movieDataDao: MovieDataDao,
+    ): MovieListEntity {
         val moviesEntity = getAll()
-       val movieList = movieDataDao.getMoviesByQuery(searchQuery)
-
+        val movieList = movieDataDao.getAll()
         moviesEntity.results = movieList
-
         return moviesEntity
     }
 
 
     @Transaction
-    fun getMoviesByGenre(movieDataDao: MovieDataDao, genre: GenreData): MovieListEntity{
-        val genredMovies = mutableListOf<MovieDataEntity>()
+    fun getMoviesByGenreAndQuery(
+        movieDataDao: MovieDataDao,
+        genre: GenreData?,
+        searchedQuery: String = ""
+    ): MovieListEntity {
         val moviesEntity = getAll()
-        val movieList = movieDataDao.getAll()
+        val filteredMovieList = movieDataDao.getMoviesByQuery(searchedQuery).toMutableList()
+        val genredMovieList = mutableListOf<MovieDataEntity>()
 
-        movieList.forEach {
-            if(it.genreIds.contains(genre.id)){
-                genredMovies.add(it)
+        if (genre != null) {
+            filteredMovieList.forEach { movieData ->
+                if (movieData.genreIds.contains(genre.id)) {
+                    genredMovieList.add(movieData)
+                }
             }
+            moviesEntity.results = genredMovieList
+        } else {
+            moviesEntity.results = filteredMovieList
         }
-
-        moviesEntity.results = genredMovies
 
         return moviesEntity
     }

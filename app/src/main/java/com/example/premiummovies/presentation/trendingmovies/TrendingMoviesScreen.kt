@@ -53,7 +53,8 @@ fun TrendingMoviesScreen(
                     modifier = Modifier.fillMaxWidth(),
                     viewModel.state.searchQuery
                 ) {
-                    viewModel.searchMovieList(it)
+                    viewModel.state.searchQuery = it
+                    viewModel.filterMovieList()
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -65,14 +66,15 @@ fun TrendingMoviesScreen(
                 viewModel.state.genres?.genres?.let { genres ->
                     FilterChipGroup(genres, viewModel.state.selectedGenre) {
                         viewModel.state.selectedGenre = it
-                      viewModel.filterByGenre(it)
+                      viewModel.filterMovieList()
                     }
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
 
                 MoviesGrid(viewModel.state, {
-                    viewModel.getMovieList()
+                    if (viewModel.canLoadMore())
+                        viewModel.getMovieList()
                 }, { movieId ->
                     navController.navigate(Screen.MovieDetailsScreen.withArgs(movieId))
                 })
