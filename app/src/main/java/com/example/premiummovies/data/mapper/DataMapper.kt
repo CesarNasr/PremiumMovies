@@ -1,12 +1,6 @@
 package com.example.premiummovies.data.mapper
 
-interface EntityMapper <Entity, DomainModel>{
-
-
-}
-
-
-interface Mapper <DTO, DomainModel, Entity>{
+interface DataMapper <DTO, DomainModel, Entity>{
 
     fun mapFromDto(dto: DTO): DomainModel
 

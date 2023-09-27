@@ -12,9 +12,9 @@ interface MovieRepository {
 
     suspend fun getMovieGenres(): Flow<Resource<GenreList>>
 
-    suspend fun getTrendingMovies(page: Int = 0, searchQuery : String = ""): Flow<Resource<MovieList>>
+    suspend fun getTrendingMovies(page: Int = 0): Flow<Resource<MovieList>>
 
-    suspend fun getTrendingMoviesByGenre(genre : GenreData) : Flow<Resource<MovieList>>
+    suspend fun getFilteredTrendingMovies(genre : GenreData?, searchQuery : String = "") : Flow<Resource<MovieList>>
 
     suspend fun getMovieDetails(movieId: Int): Flow<Resource<MovieDetails>>
 

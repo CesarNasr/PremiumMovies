@@ -6,10 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.premiummovies.data.remotedatasource.utils.Resource
-import com.example.premiummovies.domain.model.genre.GenreData
 import com.example.premiummovies.domain.repository.MovieRepository
 import com.example.premiummovies.presentation.trendingmovies.MoviesState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,66 +18,10 @@ import javax.inject.Inject
 class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepository) :
     ViewModel() {
     var state by mutableStateOf(MoviesState())
-    var movieDetailsState by mutableStateOf(MoviesState())
-
-    /*private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()*/
 
     init {
         getMoviesData()
     }
-
-    fun getMovieList() {
-        viewModelScope.launch {
-            movieRepository.getTrendingMovies(state.pageNo + 1).collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        result.data?.let { listings ->
-
-                            val newList = state.movies
-                            newList.addAll(listings.results)
-
-                            state = state.copy(
-                                movies = newList,
-                                pageNo = listings.page
-                            )
-                        }
-                    }
-
-                    is Resource.Error -> Unit
-                    is Resource.Loading -> {
-                        state = state.copy(isLoading = result.isLoading)
-                    }
-                }
-            }
-        }
-    }
-
-
-    fun searchMovieList(searchQuery: String) {
-        viewModelScope.launch {
-            state.searchQuery = searchQuery
-
-            movieRepository.getTrendingMovies(searchQuery = searchQuery).collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        result.data?.let { listings ->
-                            state.movies = mutableListOf()
-                            state = state.copy(
-                                movies = listings.results.toMutableList(),
-                            )
-                        }
-                    }
-
-                    is Resource.Error -> Unit
-                    is Resource.Loading -> {
-                        state = state.copy(isLoading = result.isLoading)
-                    }
-                }
-            }
-        }
-    }
-
 
     private fun getGenresList() {
         viewModelScope.launch {
@@ -98,14 +43,21 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
             }
         }
     }
-    fun filterByGenre(genre: GenreData) {
+
+
+    fun getMovieList() {
         viewModelScope.launch {
-            movieRepository.getTrendingMoviesByGenre(genre).collect { result ->
+            movieRepository.getTrendingMovies(state.pageNo + 1).collect { result ->
                 when (result) {
                     is Resource.Success -> {
-                        result.data?.let { movies ->
+                        result.data?.let { listings ->
+
+                            /*   val newList = state.movies
+                               newList.addAll(listings.results)*/
+
                             state = state.copy(
-                                movies = movies.results.toMutableList()
+                                movies = listings.results,
+                                pageNo = listings.page
                             )
                         }
                     }
@@ -119,10 +71,42 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
         }
     }
 
+
+    private var filteringJob: Job? = null
+    fun filterMovieList() {
+        filteringJob?.cancel()
+        filteringJob = viewModelScope.launch {
+            delay(500L)
+            movieRepository.getFilteredTrendingMovies(state.selectedGenre, state.searchQuery)
+                .collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            result.data?.let { movies ->
+                                state = state.copy(
+                                    movies = movies.results.toMutableList()
+                                )
+                            }
+                        }
+
+                        is Resource.Error -> {
+
+                        }
+
+                        is Resource.Loading -> {
+                            state = state.copy(isLoading = result.isLoading)
+                        }
+
+                    }
+                }
+        }
+    }
+
     private fun getMoviesData() {
         getMovieList()
         getGenresList()
     }
 
+    fun canLoadMore(): Boolean =
+        !state.isLoading && state.searchQuery.isBlank() && state.searchQuery.isEmpty()
 
 }

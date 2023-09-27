@@ -23,7 +23,7 @@ import javax.inject.Inject
  * Each level of our app (local data source/ remote datasource / Domain) has it's own entity/ models and this class helps us map
  * them to one another
  */
-class GenresMapper @Inject constructor() : Mapper<GenreListDto, GenreList, GenreListEntity> {
+class GenresMapper @Inject constructor() : DataMapper<GenreListDto, GenreList, GenreListEntity> {
 
     override fun mapFromDto(dto: GenreListDto): GenreList {
         val genresList = mutableListOf<GenreData>()
@@ -97,7 +97,7 @@ private fun GenreData.toGenreDto(): GenreDataDto {
 }
 
 
-class MovieMapper @Inject constructor() : Mapper<MovieDataDto, MovieData, MovieDataEntity> {
+class MovieMapper @Inject constructor() : DataMapper<MovieDataDto, MovieData, MovieDataEntity> {
 
     override fun mapFromDto(dto: MovieDataDto): MovieData {
         return MovieData(
@@ -192,7 +192,7 @@ class MovieMapper @Inject constructor() : Mapper<MovieDataDto, MovieData, MovieD
 
 
 class MovieDetailsMapper @Inject constructor() :
-    Mapper<MovieDetailsDto, MovieDetails, MovieDetailsEntity> {
+    DataMapper<MovieDetailsDto, MovieDetails, MovieDetailsEntity> {
 
 
     override fun mapFromDto(dto: MovieDetailsDto): MovieDetails {
