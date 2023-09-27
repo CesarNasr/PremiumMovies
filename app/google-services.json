@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "515480372258",
+    "project_id": "premiummovies-94ab8",
+    "storage_bucket": "premiummovies-94ab8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515480372258:android:d1bbfdea6a49aa90f6b67b",
+        "android_client_info": {
+          "package_name": "com.example.premiummovies"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB97uAsawuBDGtoHysHFV09EbFJZCVs4w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
