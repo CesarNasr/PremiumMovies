@@ -11,7 +11,7 @@ import androidx.room.TypeConverter
 
 @Entity
 data class MovieDataEntity(
-    @ColumnInfo("id" )
+    @PrimaryKey(autoGenerate = true )
     val id: Int,
 
     @ColumnInfo("backdrop_path")

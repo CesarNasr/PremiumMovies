@@ -9,6 +9,7 @@ import com.example.premiummovies.data.mapper.MovieMapper
 import com.example.premiummovies.data.remotedatasource.api.remote.MovieApiService
 import com.example.premiummovies.data.remotedatasource.utils.Resource
 import com.example.premiummovies.data.remotedatasource.utils.ResponseConverter
+import com.example.premiummovies.domain.model.genre.GenreData
 import com.example.premiummovies.domain.model.genre.GenreList
 import com.example.premiummovies.domain.model.moviedetails.MovieDetails
 import com.example.premiummovies.domain.model.movies.MovieList
@@ -69,39 +70,70 @@ class MovieRepositoryImpl @Inject constructor(
         return Resource.Success(result)
     }
 
-    override suspend fun getTrendingMovies(page: Int): Flow<Resource<MovieList>> {
+    override suspend fun getTrendingMovies(
+        page: Int,
+        searchQuery: String
+    ): Flow<Resource<MovieList>> {
         return flow {
             try {
                 emit(Resource.Loading())
-                val response = movieApiService.getTrendingMovies(
-                    includeAdult = includeAdultMovies,
-                    sortBy = sortBy,
-                    page = page,
-                    apiKey = apiKey
-                )
+                if (searchQuery.isBlank()) {
 
-                val result = responseConverter.responseToResult(response = response) {
-                    movieMapper.mapToMovieListDomain(it)
-                }
+                    val response = movieApiService.getTrendingMovies(
+                        includeAdult = includeAdultMovies,
+                        sortBy = sortBy,
+                        page = page,
+                        apiKey = apiKey
+                    )
 
-                if (result is Resource.Success) {
-                    result.data?.let {
-                        db.MoviesDao()
-                            .insertMoviesData(movieMapper.mapToMovieListEntity(result.data))
-                        emit(result)
+                    val result = responseConverter.responseToResult(response = response) {
+                        movieMapper.mapToMovieListDomain(it)
                     }
-                } else if (result is Resource.Error) {
-                    emit(fetchLocalTrendingMovies())
+
+                    if (result is Resource.Success) {
+                        result.data?.let {
+                            db.MoviesDao()
+                                .insertMoviesData(
+                                    movieMapper.mapToMovieListEntity(result.data),
+                                    db.MovieDataDao()
+                                )
+                            emit(result)
+                        }
+                    } else if (result is Resource.Error) {
+                        emit(fetchLocalTrendingMovies(searchQuery))
+                    }
+                } else {
+
+                    emit(fetchLocalTrendingMovies(searchQuery))
+
                 }
             } catch (e: IOException) {
-                emit(fetchLocalTrendingMovies())
+                emit(fetchLocalTrendingMovies(searchQuery))
             }
 
         }.flowOn(ioDispatcher)
     }
 
-    private fun fetchLocalTrendingMovies(): Resource.Success<MovieList> {
-        val localMovies = db.MoviesDao().getAll()
+    override suspend fun getTrendingMoviesByGenre(genre: GenreData): Flow<Resource<MovieList>> {
+        return flow {
+            try {
+                emit(Resource.Loading())
+
+                emit(fetchLocalTrendingMoviesByGenre(genre))
+            } catch (e: IOException) {
+                emit(Resource.Error("Please check your internet connection"))
+            }
+
+        }.flowOn(ioDispatcher)
+    }
+
+    private fun fetchLocalTrendingMovies(searchQuery: String = ""): Resource.Success<MovieList> {
+        val localMovies = db.MoviesDao().getAllMovieData(db.MovieDataDao(), searchQuery)
+        return Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
+    }
+
+    private fun fetchLocalTrendingMoviesByGenre(genre: GenreData): Resource.Success<MovieList> {
+        val localMovies = db.MoviesDao().getMoviesByGenre(db.MovieDataDao(), genre)
         return Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
     }
 

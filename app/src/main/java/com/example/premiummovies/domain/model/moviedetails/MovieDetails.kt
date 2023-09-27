@@ -13,7 +13,7 @@ data class MovieDetails(
     val overview: String,
     val posterPath: String,
     val releaseDate: String,
-    val revenue: Int,
+    val revenue: Long,
     val runtime: Int,
     val spokenLanguages: List<SpokenLanguage>,
     val status: String,

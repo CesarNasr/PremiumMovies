@@ -53,9 +53,7 @@ fun TrendingMoviesScreen(
                     modifier = Modifier.fillMaxWidth(),
                     viewModel.state.searchQuery
                 ) {
-                    viewModel.state.searchQuery = it
-                    // fetchData()
-                    // todo update data
+                    viewModel.searchMovieList(it)
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -67,8 +65,7 @@ fun TrendingMoviesScreen(
                 viewModel.state.genres?.genres?.let { genres ->
                     FilterChipGroup(genres, viewModel.state.selectedGenre) {
                         viewModel.state.selectedGenre = it
-                        // fetchData()
-                        // todo update data
+                      viewModel.filterByGenre(it)
                     }
                 }
 

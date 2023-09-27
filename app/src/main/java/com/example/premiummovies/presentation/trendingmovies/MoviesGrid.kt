@@ -30,13 +30,6 @@ fun MoviesGrid(state: MoviesState, onLoadMore: () -> Unit, onItemClicked: (Int) 
             ) {
                 onItemClicked(it.id)
             }
-            /* if (i < state.companies.size) {
-                 Divider(
-                     modifier = Modifier.padding(
-                         horizontal = 16.dp
-                     )
-                 )
-             }*/
         }
     }
 

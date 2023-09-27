@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.premiummovies.data.remotedatasource.utils.Resource
+import com.example.premiummovies.domain.model.genre.GenreData
 import com.example.premiummovies.domain.repository.MovieRepository
 import com.example.premiummovies.presentation.trendingmovies.MoviesState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,6 +53,31 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
     }
 
 
+    fun searchMovieList(searchQuery: String) {
+        viewModelScope.launch {
+            state.searchQuery = searchQuery
+
+            movieRepository.getTrendingMovies(searchQuery = searchQuery).collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let { listings ->
+                            state.movies = mutableListOf()
+                            state = state.copy(
+                                movies = listings.results.toMutableList(),
+                            )
+                        }
+                    }
+
+                    is Resource.Error -> Unit
+                    is Resource.Loading -> {
+                        state = state.copy(isLoading = result.isLoading)
+                    }
+                }
+            }
+        }
+    }
+
+
     private fun getGenresList() {
         viewModelScope.launch {
             movieRepository.getMovieGenres().collect { result ->
@@ -72,11 +98,31 @@ class MoviesViewModel @Inject constructor(private val movieRepository: MovieRepo
             }
         }
     }
+    fun filterByGenre(genre: GenreData) {
+        viewModelScope.launch {
+            movieRepository.getTrendingMoviesByGenre(genre).collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let { movies ->
+                            state = state.copy(
+                                movies = movies.results.toMutableList()
+                            )
+                        }
+                    }
 
+                    is Resource.Error -> Unit
+                    is Resource.Loading -> {
+                        state = state.copy(isLoading = result.isLoading)
+                    }
+                }
+            }
+        }
+    }
 
-
-    private fun getMoviesData(){
+    private fun getMoviesData() {
         getMovieList()
         getGenresList()
     }
+
+
 }

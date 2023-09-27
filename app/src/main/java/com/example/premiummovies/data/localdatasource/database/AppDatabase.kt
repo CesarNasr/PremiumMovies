@@ -6,21 +6,25 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.premiummovies.data.localdatasource.dao.GenresDao
+import com.example.premiummovies.data.localdatasource.dao.MovieDataDao
 import com.example.premiummovies.data.localdatasource.dao.MoviesDao
 import com.example.premiummovies.data.localdatasource.entity.genre.GenreDataEntity
+import com.example.premiummovies.data.localdatasource.entity.movies.MovieDataEntity
 import com.example.premiummovies.data.localdatasource.entity.movies.MovieListEntity
 
 const val moviesDatabaseName = "movies.db"
 
 @Database(
-    entities = [MovieListEntity::class, GenreDataEntity::class],
+    entities = [MovieListEntity::class,MovieDataEntity::class ,GenreDataEntity::class],
     version = 1,
     exportSchema = false
 )
-@TypeConverters(MovieDataTypeConverter::class, IntegerTypeConverter::class)
+@TypeConverters(IntegerTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun MovieDataDao(): MovieDataDao
     abstract fun MoviesDao(): MoviesDao
     abstract fun GenresDao(): GenresDao
+
 
     companion object {
         @Volatile

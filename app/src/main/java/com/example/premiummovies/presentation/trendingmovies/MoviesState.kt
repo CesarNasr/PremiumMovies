@@ -5,7 +5,7 @@ import com.example.premiummovies.domain.model.genre.GenreList
 import com.example.premiummovies.domain.model.movies.MovieData
 
 data class MoviesState(
-    val movies: MutableList<MovieData> = mutableListOf(),
+    var movies: MutableList<MovieData> = mutableListOf(),
     val genres: GenreList? = null,
     var selectedGenre: GenreData? = null,
     val isLoading: Boolean = false,
