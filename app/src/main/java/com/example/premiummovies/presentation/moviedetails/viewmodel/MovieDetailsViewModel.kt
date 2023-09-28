@@ -17,10 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(private val movieRepository: MovieRepository) :
     ViewModel() {
-    var state by mutableStateOf(MovieDetailState())
 
-    /*private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()*/
+    var state by mutableStateOf(MovieDetailState())
 
     fun getMovieDetails(movieId: Int) {
         viewModelScope.launch {
@@ -30,12 +28,19 @@ class MovieDetailsViewModel @Inject constructor(private val movieRepository: Mov
                         result.data?.let { movie ->
                             state = state.copy(
                                 movie = movie,
-                                isLoading = false
+                                isLoading = false,
+                                error = ""
                             )
                         }
                     }
 
-                    is Resource.Error -> Unit
+                    is Resource.Error -> {
+                        state = state.copy(
+                            error = result.message ?: "",
+                            isLoading = false
+                        )
+                    }
+
                     is Resource.Loading -> {
                         state = state.copy(isLoading = result.isLoading)
                     }
@@ -43,7 +48,6 @@ class MovieDetailsViewModel @Inject constructor(private val movieRepository: Mov
             }
         }
     }
-
 
 
     fun getGenresStringList(genres: List<GenreData>?): String {

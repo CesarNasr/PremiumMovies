@@ -14,9 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MoviesGrid(state: MoviesState, onLoadMore: () -> Unit, onItemClicked: (Int) -> Unit) {
+fun MoviesGrid(state: MoviesState, listState : LazyGridState,onLoadMore: () -> Unit, onItemClicked: (Int) -> Unit) {
 
-    val listState = rememberLazyGridState()
 
     LazyVerticalGrid(
         state = listState,
@@ -32,8 +31,7 @@ fun MoviesGrid(state: MoviesState, onLoadMore: () -> Unit, onItemClicked: (Int) 
             }
         }
     }
-
-    listState.OnBottomReached(buffer = 4) {
+    listState.OnBottomReached(buffer = 2) {
         onLoadMore()
     }
 }

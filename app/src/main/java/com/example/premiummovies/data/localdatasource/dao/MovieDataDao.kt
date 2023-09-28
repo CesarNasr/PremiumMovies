@@ -11,7 +11,7 @@ import com.example.premiummovies.data.localdatasource.entity.movies.MovieDataEnt
 @Dao
 interface MovieDataDao {
 
-    @Query("SELECT * FROM MovieDataEntity")
+    @Query("SELECT * FROM MovieDataEntity ORDER BY dbId ASC")
     fun getAll(): List<MovieDataEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

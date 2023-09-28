@@ -9,6 +9,7 @@ import com.example.premiummovies.data.remotedatasource.api.remote.MovieApiServic
 import com.example.premiummovies.data.remotedatasource.utils.ResponseConverter
 import com.example.premiummovies.data.repositoryimpl.MovieRepositoryImpl
 import com.example.premiummovies.domain.repository.MovieRepository
+import com.example.premiummovies.presentation.utils.ResourcesProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +39,8 @@ object RepositoryModule {
         genresMapper: GenresMapper,
         movieDetailsMapper: MovieDetailsMapper,
         appDataBase: AppDatabase,
-        ioDispatcher: CoroutineDispatcher
+        ioDispatcher: CoroutineDispatcher,
+        resourcesProvider: ResourcesProvider
     ): MovieRepository {
         return MovieRepositoryImpl(
             movieApiService,
@@ -47,7 +49,8 @@ object RepositoryModule {
             movieMapper,
             appDataBase,
             movieDetailsMapper,
-            ioDispatcher
+            ioDispatcher,
+            resourcesProvider
         )
     }
 

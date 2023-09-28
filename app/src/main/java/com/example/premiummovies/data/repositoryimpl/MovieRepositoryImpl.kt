@@ -1,6 +1,7 @@
 package com.example.premiummovies.data.repositoryimpl
 
 import com.example.premiummovies.BuildConfig
+import com.example.premiummovies.R
 import com.example.premiummovies.data.localdatasource.database.AppDatabase
 import com.example.premiummovies.data.localdatasource.entity.genre.GenreListEntity
 import com.example.premiummovies.data.mapper.GenresMapper
@@ -9,11 +10,13 @@ import com.example.premiummovies.data.mapper.MovieMapper
 import com.example.premiummovies.data.remotedatasource.api.remote.MovieApiService
 import com.example.premiummovies.data.remotedatasource.utils.Resource
 import com.example.premiummovies.data.remotedatasource.utils.ResponseConverter
+import com.example.premiummovies.data.remotedatasource.utils.SORTING_CRITERIA
 import com.example.premiummovies.domain.model.genre.GenreData
 import com.example.premiummovies.domain.model.genre.GenreList
 import com.example.premiummovies.domain.model.moviedetails.MovieDetails
 import com.example.premiummovies.domain.model.movies.MovieList
 import com.example.premiummovies.domain.repository.MovieRepository
+import com.example.premiummovies.presentation.utils.ResourcesProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -30,11 +33,12 @@ class MovieRepositoryImpl @Inject constructor(
     private val db: AppDatabase,
     private val movieDetailsMapper: MovieDetailsMapper,
     private val ioDispatcher: CoroutineDispatcher,
+    private val resourcesProvider: ResourcesProvider
     ) : MovieRepository {
 
     private val apiKey = BuildConfig.API_KEY
     private val includeAdultMovies = false
-    private val sortBy = "popularity.desc"
+    private val sortBy = SORTING_CRITERIA
 
     override suspend fun getMovieGenres(): Flow<Resource<GenreList>> {
 
@@ -67,7 +71,7 @@ class MovieRepositoryImpl @Inject constructor(
             } catch (e: IOException) {
                 emit(fetchLocalGenres())
             } catch (e : Exception){
-                emit(Resource.Error("Please check your internet connection"))
+                emit(Resource.Error(errorString))
             } as Unit
         }.flowOn(ioDispatcher)
     }
@@ -119,7 +123,7 @@ class MovieRepositoryImpl @Inject constructor(
             } catch (e: IOException) {
                 emit(fetchLocalTrendingMovies())
             } catch (e : Exception){
-                emit(Resource.Error("Please check your internet connection"))
+                emit(Resource.Error(errorString))
             } as Unit
         }.flowOn(ioDispatcher)
     }
@@ -134,7 +138,7 @@ class MovieRepositoryImpl @Inject constructor(
 
                 emit(fetchFilteredLocalTrendingMovies(genre, searchQuery))
             } catch (e: IOException) {
-                emit(Resource.Error("Please check your internet connection"))
+                emit(Resource.Error(errorString))
             }
 
         }.flowOn(ioDispatcher)
@@ -144,7 +148,7 @@ class MovieRepositoryImpl @Inject constructor(
         val localMovies = db.MoviesDao().getAllMovieData(db.MovieDataDao())
         return if (localMovies != null)
             Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
-        else Resource.Error("Please check your internet connection")
+        else Resource.Error(errorString)
 
     }
 
@@ -155,7 +159,7 @@ class MovieRepositoryImpl @Inject constructor(
         val localMovies = db.MoviesDao().getMoviesByGenreAndQuery(db.MovieDataDao(), genre, searchQuery)
         return if (localMovies != null)
             Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
-        else Resource.Error("Please check your internet connection")
+        else Resource.Error(errorString)
     }
 
     override suspend fun getMovieDetails(movieId: Int): Flow<Resource<MovieDetails>> {
@@ -171,9 +175,12 @@ class MovieRepositoryImpl @Inject constructor(
                 }
                 emit(result)
             } catch (e: IOException) {
-                emit(Resource.Error("Please check your internet connection"))
+                emit(Resource.Error(errorString))
 
             }
         }
     }
+
+
+    private val errorString = resourcesProvider.getString(R.string.generic_error_message)
 }

@@ -8,4 +8,5 @@
     <string name="revenue">Revenue</string>
     <string name="usd">$</string>
     <string name="minutes">minutes</string>
+    <string name="generic_error_message">Please try again later</string>
 </resources>
