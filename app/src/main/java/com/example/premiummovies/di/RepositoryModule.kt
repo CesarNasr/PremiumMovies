@@ -39,8 +39,7 @@ object RepositoryModule {
         genresMapper: GenresMapper,
         movieDetailsMapper: MovieDetailsMapper,
         appDataBase: AppDatabase,
-        ioDispatcher: CoroutineDispatcher,
-        resourcesProvider: ResourcesProvider
+        ioDispatcher: CoroutineDispatcher
     ): MovieRepository {
         return MovieRepositoryImpl(
             movieApiService,
@@ -49,8 +48,7 @@ object RepositoryModule {
             movieMapper,
             appDataBase,
             movieDetailsMapper,
-            ioDispatcher,
-            resourcesProvider
+            ioDispatcher
         )
     }
 

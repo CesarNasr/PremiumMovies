@@ -2,8 +2,6 @@
 
 package com.example.premiummovies.presentation.trendingmovies
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,15 +13,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +42,11 @@ fun TrendingMoviesScreen(
     navController: NavController,
     viewModel: MoviesViewModel = hiltViewModel()/* ,state: MovieListingsState, onLoadMore: () -> Unit*/
 ) {
+
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(TrendingMoviesEvents.LoadMovies(true))
+    }
+
     val listState = rememberLazyGridState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -95,12 +98,12 @@ fun TrendingMoviesScreen(
                     }
                 } else if (viewModel.state.movies.isEmpty() && viewModel.state.error?.isNotBlank() == true && viewModel.state.error?.isNotEmpty() == true) {
                     ErrorView(error = viewModel.state.error) {
-                        viewModel.onEvent(TrendingMoviesEvents.LoadMovies)
+                        viewModel.onEvent(TrendingMoviesEvents.LoadMovies())
                     }
                 } else {
                     MoviesGrid(viewModel.state,listState, {
                         if (viewModel.canLoadMore())
-                            viewModel.onEvent(TrendingMoviesEvents.LoadMovies)
+                            viewModel.onEvent(TrendingMoviesEvents.LoadMovies())
 
                     }, { movieId ->
                         navController.navigate(Screen.MovieDetailsScreen.withArgs(movieId))

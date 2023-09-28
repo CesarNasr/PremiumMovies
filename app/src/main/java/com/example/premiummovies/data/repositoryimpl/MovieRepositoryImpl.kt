@@ -32,9 +32,7 @@ class MovieRepositoryImpl @Inject constructor(
     private val movieMapper: MovieMapper,
     private val db: AppDatabase,
     private val movieDetailsMapper: MovieDetailsMapper,
-    private val ioDispatcher: CoroutineDispatcher,
-    private val resourcesProvider: ResourcesProvider
-    ) : MovieRepository {
+    private val ioDispatcher: CoroutineDispatcher) : MovieRepository {
 
     private val apiKey = BuildConfig.API_KEY
     private val includeAdultMovies = false
@@ -64,14 +62,12 @@ class MovieRepositoryImpl @Inject constructor(
                         emit(fetchLocalGenres())
                     }
 
-                    is Resource.Loading -> {
-
-                    }
+                    is Resource.Loading -> {}
                 }
             } catch (e: IOException) {
                 emit(fetchLocalGenres())
             } catch (e : Exception){
-                emit(Resource.Error(errorString))
+                emit(Resource.Error())
             } as Unit
         }.flowOn(ioDispatcher)
     }
@@ -116,14 +112,12 @@ class MovieRepositoryImpl @Inject constructor(
                         emit(fetchLocalTrendingMovies())
                     }
 
-                    is Resource.Loading -> {
-
-                    }
+                    is Resource.Loading -> {}
                 }
             } catch (e: IOException) {
                 emit(fetchLocalTrendingMovies())
             } catch (e : Exception){
-                emit(Resource.Error(errorString))
+                emit(Resource.Error())
             } as Unit
         }.flowOn(ioDispatcher)
     }
@@ -138,7 +132,7 @@ class MovieRepositoryImpl @Inject constructor(
 
                 emit(fetchFilteredLocalTrendingMovies(genre, searchQuery))
             } catch (e: IOException) {
-                emit(Resource.Error(errorString))
+                emit(Resource.Error())
             }
 
         }.flowOn(ioDispatcher)
@@ -148,7 +142,7 @@ class MovieRepositoryImpl @Inject constructor(
         val localMovies = db.MoviesDao().getAllMovieData(db.MovieDataDao())
         return if (localMovies != null)
             Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
-        else Resource.Error(errorString)
+        else Resource.Error()
 
     }
 
@@ -159,7 +153,7 @@ class MovieRepositoryImpl @Inject constructor(
         val localMovies = db.MoviesDao().getMoviesByGenreAndQuery(db.MovieDataDao(), genre, searchQuery)
         return if (localMovies != null)
             Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
-        else Resource.Error(errorString)
+        else Resource.Error()
     }
 
     override suspend fun getMovieDetails(movieId: Int): Flow<Resource<MovieDetails>> {
@@ -175,12 +169,12 @@ class MovieRepositoryImpl @Inject constructor(
                 }
                 emit(result)
             } catch (e: IOException) {
-                emit(Resource.Error(errorString))
+                emit(Resource.Error())
 
             }
         }
     }
 
 
-    private val errorString = resourcesProvider.getString(R.string.generic_error_message)
+    //private val errorString = resourcesProvider.getString(R.string.generic_error_message)
 }
