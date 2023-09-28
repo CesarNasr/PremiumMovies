@@ -47,18 +47,28 @@ class MovieRepositoryImpl @Inject constructor(
                     genresMapper.mapFromDto(it)
                 }
 
-                if (result is Resource.Success) {
-                    result.data?.let {
-                        db.GenresDao()
-                            .insertGenresData(genresMapper.mapToEntity(result.data).genres)
-                        emit(result)
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let {
+                            db.GenresDao()
+                                .insertGenresData(genresMapper.mapToEntity(result.data).genres)
+                            emit(result)
+                        }
                     }
-                } else if (result is Resource.Error) {
-                    emit(fetchLocalGenres())
+
+                    is Resource.Error -> {
+                        emit(fetchLocalGenres())
+                    }
+
+                    is Resource.Loading -> {
+
+                    }
                 }
             } catch (e: IOException) {
                 emit(fetchLocalGenres())
-            }
+            } catch (e : Exception){
+                emit(Resource.Error("Please check your internet connection"))
+            } as Unit
         }.flowOn(ioDispatcher)
     }
 
@@ -86,22 +96,31 @@ class MovieRepositoryImpl @Inject constructor(
                     movieMapper.mapToMovieListDomain(it)
                 }
 
-                if (result is Resource.Success) {
-                    result.data?.let {
-                        db.MoviesDao()
-                            .insertMoviesData(
-                                movieMapper.mapToMovieListEntity(result.data),
-                                db.MovieDataDao()
-                            )
-                        emit(result)
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let {
+                            db.MoviesDao()
+                                .insertMoviesData(
+                                    movieMapper.mapToMovieListEntity(result.data),
+                                    db.MovieDataDao()
+                                )
+                            emit(result)
+                        }
                     }
-                } else if (result is Resource.Error) {
-                    emit(fetchLocalTrendingMovies())
+
+                    is Resource.Error -> {
+                        emit(fetchLocalTrendingMovies())
+                    }
+
+                    is Resource.Loading -> {
+
+                    }
                 }
             } catch (e: IOException) {
                 emit(fetchLocalTrendingMovies())
-            }
-
+            } catch (e : Exception){
+                emit(Resource.Error("Please check your internet connection"))
+            } as Unit
         }.flowOn(ioDispatcher)
     }
 
@@ -121,18 +140,22 @@ class MovieRepositoryImpl @Inject constructor(
         }.flowOn(ioDispatcher)
     }
 
-    private fun fetchLocalTrendingMovies(): Resource.Success<MovieList> {
+    private fun fetchLocalTrendingMovies(): Resource<MovieList> {
         val localMovies = db.MoviesDao().getAllMovieData(db.MovieDataDao())
-        return Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
+        return if (localMovies != null)
+            Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
+        else Resource.Error("Please check your internet connection")
+
     }
 
     private fun fetchFilteredLocalTrendingMovies(
         genre: GenreData?,
         searchQuery: String = ""
-    ): Resource.Success<MovieList> {
-        val localMovies =
-            db.MoviesDao().getMoviesByGenreAndQuery(db.MovieDataDao(), genre, searchQuery)
-        return Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
+    ): Resource<MovieList> {
+        val localMovies = db.MoviesDao().getMoviesByGenreAndQuery(db.MovieDataDao(), genre, searchQuery)
+        return if (localMovies != null)
+            Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
+        else Resource.Error("Please check your internet connection")
     }
 
     override suspend fun getMovieDetails(movieId: Int): Flow<Resource<MovieDetails>> {

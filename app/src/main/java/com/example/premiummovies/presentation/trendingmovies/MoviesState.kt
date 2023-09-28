@@ -9,6 +9,7 @@ data class MoviesState(
     val genres: GenreList? = null,
     var selectedGenre: GenreData? = null,
     val isLoading: Boolean = false,
+    val error: String?= "",
     val isRefreshing: Boolean = false,
     var searchQuery: String = "",
     var pageNo: Int = 0

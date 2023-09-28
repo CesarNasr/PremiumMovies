@@ -2,6 +2,7 @@
 
 package com.example.premiummovies.presentation.trendingmovies
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -9,11 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -54,7 +57,7 @@ fun TrendingMoviesScreen(
                     viewModel.state.searchQuery
                 ) {
                     viewModel.state.searchQuery = it
-                    viewModel.filterMovieList()
+                    viewModel.onEvent(TrendingMoviesEvents.FilterMovies)
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -66,18 +69,31 @@ fun TrendingMoviesScreen(
                 viewModel.state.genres?.genres?.let { genres ->
                     FilterChipGroup(genres, viewModel.state.selectedGenre) {
                         viewModel.state.selectedGenre = it
-                      viewModel.filterMovieList()
+                        viewModel.onEvent(TrendingMoviesEvents.FilterMovies)
                     }
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                MoviesGrid(viewModel.state, {
-                    if (viewModel.canLoadMore())
-                        viewModel.getMovieList()
-                }, { movieId ->
-                    navController.navigate(Screen.MovieDetailsScreen.withArgs(movieId))
-                })
+                if (viewModel.state.isLoading) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else if (viewModel.state.movies.isEmpty() && viewModel.state.error?.isNotBlank() == true && viewModel.state.error?.isNotEmpty() == true) {
+                    Text(text = "Error")
+                } else {
+                    MoviesGrid(viewModel.state, {
+                        if (viewModel.canLoadMore())
+                            viewModel.onEvent(TrendingMoviesEvents.LoadMovies)
+
+                    }, { movieId ->
+                        navController.navigate(Screen.MovieDetailsScreen.withArgs(movieId))
+                    })
+                }
+
             }
         }
     }
