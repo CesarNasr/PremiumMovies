@@ -8,6 +8,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.premiummovies.presentation.moviedetails.MovieDetailsScreen
 import com.example.premiummovies.presentation.trendingmovies.TrendingMoviesScreen
+/**
+ * Navigation Controller file
+ */
+
+private const val ARG_MOVIE_ID = "movieId"
 
 @Composable
 fun Navigation() {
@@ -17,16 +22,16 @@ fun Navigation() {
             TrendingMoviesScreen(navController = navController)
         }
         composable(
-            route = Screen.MovieDetailsScreen.route + "/{movieId}", // optional : "?movieId={movieId}"
+            route = Screen.MovieDetailsScreen.route + "/{$ARG_MOVIE_ID}", // optional : "?movieId={movieId}"
             arguments = listOf(
-                navArgument("movieId") {
+                navArgument(ARG_MOVIE_ID) {
                     type = NavType.IntType
                     defaultValue = -1
                     nullable = false
                 }
             ),
             content = { entry ->
-                MovieDetailsScreen(movieId = entry.arguments?.getInt("movieId") ?: -1)
+                MovieDetailsScreen(movieId = entry.arguments?.getInt(ARG_MOVIE_ID) ?: -1)
             }
         )
     }

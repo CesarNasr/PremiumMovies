@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,7 @@ import com.example.premiummovies.R
 import com.example.premiummovies.presentation.moviedetails.viewmodel.MovieDetailsViewModel
 import com.example.premiummovies.presentation.utils.getImageUrl
 import com.example.premiummovies.presentation.utils.getYear
+import com.example.premiummovies.presentation.commonui.ErrorView
 
 @Composable
 fun MovieDetailsScreen(
@@ -52,14 +54,20 @@ fun MovieDetailsScreen(
     val state = viewModel.state
 
     if (state.isLoading) {
-        Box(contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             CircularProgressIndicator()
+        }
+    } else if (viewModel.state.movie == null && viewModel.state.error?.isNotBlank() == true && viewModel.state.error?.isNotEmpty() == true) {
+        ErrorView(error = viewModel.state.error) {
+            viewModel.getMovieDetails(movieId)
         }
     } else {
         MovieDetailsBody(state, viewModel)
     }
 }
-
 
 
 @Composable

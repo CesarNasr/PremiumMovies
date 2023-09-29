@@ -7,11 +7,14 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.example.premiummovies.data.localdatasource.entity.movies.MovieDataEntity
 
+/**
+ * Used ROOM database for easily creating SQLITE database tables, insert items, delete items and QUERY many other conditions
+ */
 
 @Dao
 interface MovieDataDao {
 
-    @Query("SELECT * FROM MovieDataEntity")
+    @Query("SELECT * FROM MovieDataEntity ORDER BY dbId ASC")
     fun getAll(): List<MovieDataEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

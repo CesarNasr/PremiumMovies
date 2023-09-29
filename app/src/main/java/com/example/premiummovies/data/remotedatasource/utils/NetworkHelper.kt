@@ -8,7 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 /**
- * Class that acts as network util
+ * Class that acts as a network util
  */
 class NetworkHelper @Inject constructor(@ApplicationContext private val context: Context) {
     fun isNetworkAvailable(): Boolean {

@@ -76,6 +76,7 @@ android {
 }
 
 dependencies {
+    testImplementation("junit:junit:4.12")
     val hiltVersion = "2.44.2"
     val composeVersion = "1.5.3"
     val retrofitVersion = "2.9.0"
@@ -142,7 +143,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
     testImplementation("org.hamcrest:hamcrest-all:1.3")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
-    testImplementation("org.robolectric:robolectric:4.3.1")
+    testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("com.google.truth:truth:1.0.1")
     testImplementation("org.mockito:mockito-core:2.25.0")
 

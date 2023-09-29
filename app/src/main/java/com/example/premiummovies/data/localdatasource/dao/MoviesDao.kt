@@ -5,12 +5,15 @@ import com.example.premiummovies.data.localdatasource.entity.movies.MovieDataEnt
 import com.example.premiummovies.data.localdatasource.entity.movies.MovieListEntity
 import com.example.premiummovies.domain.model.genre.GenreData
 
+/**
+ * Used ROOM database for easily creating SQLITE database tables, insert items, delete items and QUERY many other conditions
+ */
 
 @Dao
 interface MoviesDao {
 
     @Query("SELECT * FROM MovieListEntity")
-    fun getAll(): MovieListEntity
+    fun getAll(): MovieListEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertItem(movies: MovieListEntity): Long
@@ -30,10 +33,13 @@ interface MoviesDao {
     @Transaction
     fun getAllMovieData(
         movieDataDao: MovieDataDao,
-    ): MovieListEntity {
+    ): MovieListEntity? {
         val moviesEntity = getAll()
         val movieList = movieDataDao.getAll()
-        moviesEntity.results = movieList
+
+        moviesEntity?.let {
+            it.results = movieList
+        }
         return moviesEntity
     }
 
@@ -43,7 +49,7 @@ interface MoviesDao {
         movieDataDao: MovieDataDao,
         genre: GenreData?,
         searchedQuery: String = ""
-    ): MovieListEntity {
+    ): MovieListEntity? {
         val moviesEntity = getAll()
         val filteredMovieList = movieDataDao.getMoviesByQuery(searchedQuery).toMutableList()
         val genredMovieList = mutableListOf<MovieDataEntity>()
@@ -54,9 +60,9 @@ interface MoviesDao {
                     genredMovieList.add(movieData)
                 }
             }
-            moviesEntity.results = genredMovieList
+            moviesEntity?.results = genredMovieList
         } else {
-            moviesEntity.results = filteredMovieList
+            moviesEntity?.results = filteredMovieList
         }
 
         return moviesEntity

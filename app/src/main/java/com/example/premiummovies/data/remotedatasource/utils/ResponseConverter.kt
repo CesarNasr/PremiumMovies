@@ -1,10 +1,6 @@
 package com.example.premiummovies.data.remotedatasource.utils
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 import retrofit2.Response
-import java.io.IOException
 
 /**
  * Responsible for converting api response to resource class

@@ -1,6 +1,7 @@
 package com.example.premiummovies.data.repositoryimpl
 
 import com.example.premiummovies.BuildConfig
+import com.example.premiummovies.R
 import com.example.premiummovies.data.localdatasource.database.AppDatabase
 import com.example.premiummovies.data.localdatasource.entity.genre.GenreListEntity
 import com.example.premiummovies.data.mapper.GenresMapper
@@ -9,11 +10,13 @@ import com.example.premiummovies.data.mapper.MovieMapper
 import com.example.premiummovies.data.remotedatasource.api.remote.MovieApiService
 import com.example.premiummovies.data.remotedatasource.utils.Resource
 import com.example.premiummovies.data.remotedatasource.utils.ResponseConverter
+import com.example.premiummovies.data.remotedatasource.utils.SORTING_CRITERIA
 import com.example.premiummovies.domain.model.genre.GenreData
 import com.example.premiummovies.domain.model.genre.GenreList
 import com.example.premiummovies.domain.model.moviedetails.MovieDetails
 import com.example.premiummovies.domain.model.movies.MovieList
 import com.example.premiummovies.domain.repository.MovieRepository
+import com.example.premiummovies.presentation.utils.ResourcesProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -21,6 +24,10 @@ import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
 
 import javax.inject.Inject
+/**
+ * This repository implementation acts as the access point to our data layer, making data decisions to fetch data from different sources
+ * in our case, either from remote datasource or from our local db, depending on the network connectivity
+ * */
 
 class MovieRepositoryImpl @Inject constructor(
     private val movieApiService: MovieApiService,
@@ -29,12 +36,11 @@ class MovieRepositoryImpl @Inject constructor(
     private val movieMapper: MovieMapper,
     private val db: AppDatabase,
     private val movieDetailsMapper: MovieDetailsMapper,
-    private val ioDispatcher: CoroutineDispatcher,
-    ) : MovieRepository {
+    private val ioDispatcher: CoroutineDispatcher) : MovieRepository {
 
     private val apiKey = BuildConfig.API_KEY
     private val includeAdultMovies = false
-    private val sortBy = "popularity.desc"
+    private val sortBy = SORTING_CRITERIA
 
     override suspend fun getMovieGenres(): Flow<Resource<GenreList>> {
 
@@ -47,18 +53,26 @@ class MovieRepositoryImpl @Inject constructor(
                     genresMapper.mapFromDto(it)
                 }
 
-                if (result is Resource.Success) {
-                    result.data?.let {
-                        db.GenresDao()
-                            .insertGenresData(genresMapper.mapToEntity(result.data).genres)
-                        emit(result)
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let {
+                            db.GenresDao()
+                                .insertGenresData(genresMapper.mapToEntity(result.data).genres)
+                            emit(result)
+                        }
                     }
-                } else if (result is Resource.Error) {
-                    emit(fetchLocalGenres())
+
+                    is Resource.Error -> {
+                        emit(fetchLocalGenres())
+                    }
+
+                    is Resource.Loading -> {}
                 }
             } catch (e: IOException) {
                 emit(fetchLocalGenres())
-            }
+            } catch (e : Exception){
+                emit(Resource.Error())
+            } as Unit
         }.flowOn(ioDispatcher)
     }
 
@@ -86,22 +100,29 @@ class MovieRepositoryImpl @Inject constructor(
                     movieMapper.mapToMovieListDomain(it)
                 }
 
-                if (result is Resource.Success) {
-                    result.data?.let {
-                        db.MoviesDao()
-                            .insertMoviesData(
-                                movieMapper.mapToMovieListEntity(result.data),
-                                db.MovieDataDao()
-                            )
-                        emit(result)
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let {
+                            db.MoviesDao()
+                                .insertMoviesData(
+                                    movieMapper.mapToMovieListEntity(result.data),
+                                    db.MovieDataDao()
+                                )
+                            emit(result)
+                        }
                     }
-                } else if (result is Resource.Error) {
-                    emit(fetchLocalTrendingMovies())
+
+                    is Resource.Error -> {
+                        emit(fetchLocalTrendingMovies())
+                    }
+
+                    is Resource.Loading -> {}
                 }
             } catch (e: IOException) {
                 emit(fetchLocalTrendingMovies())
-            }
-
+            } catch (e : Exception){
+                emit(Resource.Error())
+            } as Unit
         }.flowOn(ioDispatcher)
     }
 
@@ -115,24 +136,28 @@ class MovieRepositoryImpl @Inject constructor(
 
                 emit(fetchFilteredLocalTrendingMovies(genre, searchQuery))
             } catch (e: IOException) {
-                emit(Resource.Error("Please check your internet connection"))
+                emit(Resource.Error())
             }
 
         }.flowOn(ioDispatcher)
     }
 
-    private fun fetchLocalTrendingMovies(): Resource.Success<MovieList> {
+    private fun fetchLocalTrendingMovies(): Resource<MovieList> {
         val localMovies = db.MoviesDao().getAllMovieData(db.MovieDataDao())
-        return Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
+        return if (localMovies != null)
+            Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
+        else Resource.Error()
+
     }
 
     private fun fetchFilteredLocalTrendingMovies(
         genre: GenreData?,
         searchQuery: String = ""
-    ): Resource.Success<MovieList> {
-        val localMovies =
-            db.MoviesDao().getMoviesByGenreAndQuery(db.MovieDataDao(), genre, searchQuery)
-        return Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
+    ): Resource<MovieList> {
+        val localMovies = db.MoviesDao().getMoviesByGenreAndQuery(db.MovieDataDao(), genre, searchQuery)
+        return if (localMovies != null)
+            Resource.Success(movieMapper.mapFromMovieListEntity(localMovies))
+        else Resource.Error()
     }
 
     override suspend fun getMovieDetails(movieId: Int): Flow<Resource<MovieDetails>> {
@@ -148,9 +173,12 @@ class MovieRepositoryImpl @Inject constructor(
                 }
                 emit(result)
             } catch (e: IOException) {
-                emit(Resource.Error("Please check your internet connection"))
+                emit(Resource.Error())
 
             }
         }
     }
+
+
+    //private val errorString = resourcesProvider.getString(R.string.generic_error_message)
 }

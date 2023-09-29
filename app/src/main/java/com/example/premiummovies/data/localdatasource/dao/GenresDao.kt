@@ -8,6 +8,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Used ROOM database for easily creating SQLITE database tables, insert items, delete items and QUERY many other conditions
+ */
 
 @Dao
 interface GenresDao {
@@ -30,8 +33,5 @@ interface GenresDao {
     }
 
 
-    /**
-     *
-     *
-     */
+
 }

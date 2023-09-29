@@ -8,4 +8,5 @@ data class MovieDetailState(
     val isLoading: Boolean = false,
     val genres: String = "",
     val languages: String = "",
+    val error: String = "",
 )
