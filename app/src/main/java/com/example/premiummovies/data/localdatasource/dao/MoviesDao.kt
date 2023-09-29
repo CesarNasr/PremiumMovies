@@ -5,6 +5,9 @@ import com.example.premiummovies.data.localdatasource.entity.movies.MovieDataEnt
 import com.example.premiummovies.data.localdatasource.entity.movies.MovieListEntity
 import com.example.premiummovies.domain.model.genre.GenreData
 
+/**
+ * Used ROOM database for easily creating SQLITE database tables, insert items, delete items and QUERY many other conditions
+ */
 
 @Dao
 interface MoviesDao {

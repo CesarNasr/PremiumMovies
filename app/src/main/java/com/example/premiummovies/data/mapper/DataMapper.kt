@@ -1,4 +1,7 @@
 package com.example.premiummovies.data.mapper
+/**
+ * Generic data mapper to be implemented in mapping data
+ * */
 
 interface DataMapper <DTO, DomainModel, Entity>{
 

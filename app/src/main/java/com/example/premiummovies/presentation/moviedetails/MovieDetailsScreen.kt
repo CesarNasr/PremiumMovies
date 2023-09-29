@@ -60,7 +60,7 @@ fun MovieDetailsScreen(
         ) {
             CircularProgressIndicator()
         }
-    } else if (viewModel.state.movie != null && viewModel.state.error?.isNotBlank() == true && viewModel.state.error?.isNotEmpty() == true) {
+    } else if (viewModel.state.movie == null && viewModel.state.error?.isNotBlank() == true && viewModel.state.error?.isNotEmpty() == true) {
         ErrorView(error = viewModel.state.error) {
             viewModel.getMovieDetails(movieId)
         }

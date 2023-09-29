@@ -14,8 +14,6 @@ interface MovieApiService {
         @Query("api_key") apiKey: String
     ): Response<GenreListDto>
 
-    /*    https://api.themoviedb.org/3/discover/movie?include_adult=false&sort_by=
-        popularity.desc&page=1*/
     @GET("3/discover/movie")
     suspend fun getTrendingMovies(
         @Query("include_adult") includeAdult : Boolean,

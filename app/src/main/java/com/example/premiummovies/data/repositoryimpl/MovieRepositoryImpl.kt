@@ -24,6 +24,10 @@ import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
 
 import javax.inject.Inject
+/**
+ * This repository implementation acts as the access point to our data layer, making data decisions to fetch data from different sources
+ * in our case, either from remote datasource or from our local db, depending on the network connectivity
+ * */
 
 class MovieRepositoryImpl @Inject constructor(
     private val movieApiService: MovieApiService,

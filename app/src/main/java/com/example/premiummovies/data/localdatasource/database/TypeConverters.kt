@@ -1,6 +1,9 @@
 package com.example.premiummovies.data.localdatasource.database
 
 import androidx.room.TypeConverter
+/**
+ * Type converters are required when inserting complex (nested) object into room database (in case we don't want to create a third independent tables for that data)
+ */
 
 class IntegerTypeConverter {
     @TypeConverter

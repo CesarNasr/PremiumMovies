@@ -12,7 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.premiummovies.R
 
-
+/**
+ * Reusable Error component
+ */
 @Composable
 fun ErrorView(modifier: Modifier = Modifier, error: String?, onRetryClicked: () -> Unit) {
     Column(
