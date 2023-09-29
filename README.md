@@ -40,7 +40,12 @@ Compose:
 - I have implemented a sample work for :
   - UnitTests (MockRepositories and viewmodels), mainly for testing viewmodels
   - Instrumented Tests ( ex : to test DAOs in Room Database)
- 
+
+
+- Git :
+   - Used github, github actions and firebase distribution for CI.
+   - Created two main branches, develop, which most of the work was pushed to, and then Master, that is the main branch from which the CI flow launches, please check the history of both branches.
+
 - CI (Using firebase app distribution and github actions)
   - Created a github actions workflow (.yaml), when pushing to master branch, to build the debug APK, check for warning, run the Unit test and Intrumented tests, and upon success, disribute the APK
     NOTE: if the testers email fail to receive an invitation email (the initial emai) from firebase app-distribution, please consider following this invitation link to sign-up :
