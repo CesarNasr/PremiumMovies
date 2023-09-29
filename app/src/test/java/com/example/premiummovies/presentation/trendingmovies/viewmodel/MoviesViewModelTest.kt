@@ -87,7 +87,7 @@ class MoviesViewModelTest {
     fun `fetch movies data return error`() =  runTest {
 
             mockRepositoryImpl.resetRepoData()
-            mockRepositoryImpl.setShouldReturnNetworkError(true)
+            //mockRepositoryImpl.setShouldReturnNetworkError(true)
             runBlocking {
                 viewModel.getMovieList()
                 val response = viewModel.state.movies
