@@ -42,7 +42,7 @@ Compose:
   - Instrumented Tests ( ex : to test DAOs in Room Database)
 
 
-- Git :
+ Git :
    - Used github, github actions and firebase distribution for CI.
    - Created two main branches, develop, which most of the work was pushed to, and then Master, that is the main branch from which the CI flow launches, please check the history of both branches.
 
