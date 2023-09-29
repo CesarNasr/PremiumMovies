@@ -11,7 +11,7 @@ import org.junit.runner.Description
 @ExperimentalCoroutinesApi
 class MainCoroutineRule(
     private val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
-) : TestWatcher()/*, TestCoroutineScope by TestCoroutineScope(dispatcher) */{
+) : TestWatcher() {
 
     override fun starting(description: Description?) {
         super.starting(description)
@@ -20,7 +20,6 @@ class MainCoroutineRule(
 
     override fun finished(description: Description?) {
         super.finished(description)
-        //cleanupTestCoroutines()
         Dispatchers.resetMain()
     }
 }

@@ -65,7 +65,14 @@ class MockMovieRepositoryImpl : MovieRepository {
     }
 
     override suspend fun getMovieDetails(movieId: Int): Flow<Resource<MovieDetails>> {
-        return flowOf(Resource.Success(mockMovieDetails()))
+        return flowOf(
+            if (shouldReturnNetworkError) {
+                Resource.Error("")
+            } else {
+                movieDetails = (mockMovieDetails())
+                Resource.Success(movieDetails!!)
+            }
+        )
     }
 
 
